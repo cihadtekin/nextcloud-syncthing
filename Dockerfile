@@ -1,0 +1,29 @@
+FROM php:8.2-fpm-alpine3.18
+
+ARG NEXTCLOUD_VERSION="27.0.2"
+ARG NEXTCLOUD_INSTALLATION_DIR="/usr/local/nextcloud"
+
+COPY install.sh /
+RUN /install.sh
+
+ENV USER_ID=1000
+ENV GROUP_ID=1000
+
+ENV NEXTCLOUD_INSTALLATION_DIR=$NEXTCLOUD_INSTALLATION_DIR
+ENV NEXTCLOUD_DIR="/var/www/html/nextcloud"
+ENV NEXTCLOUD_ADMIN_USER="admin"
+ENV NEXTCLOUD_ADMIN_PASS="NextcloudAdmin2023"
+ENV NEXTCLOUD_ADMIN_EMAIL="admin@admin.com"
+ENV NEXTCLOUD_DATA_DIR="/data"
+ENV NEXTCLOUD_URL="http://localhost"
+ENV SYNCTHING_DIR="/usr/local/syncthing"
+
+EXPOSE 9000/tcp
+EXPOSE 8384/tcp
+EXPOSE 22000/tcp
+EXPOSE 22000/udp
+EXPOSE 21027/udp
+
+COPY entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["php-fpm"]
